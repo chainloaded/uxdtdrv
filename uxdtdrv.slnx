@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="uxdtdrv.vcxproj" Id="0dfdb5d1-a882-4534-b923-329d67146180" />
+</Solution>
