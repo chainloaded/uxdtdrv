@@ -225,7 +225,7 @@ NTSTATUS UtIoctlHandleReceive(
     RingBufferOne = ExAllocatePool2(POOL_FLAG_PAGED, RING_BUFFER_SIZE, UT_TAG_MAIN);
     RingBufferTwo = ExAllocatePool2(POOL_FLAG_PAGED, RING_BUFFER_SIZE, UT_TAG_MAIN);
 
-    if (!RingBufferOne || RingBufferTwo)
+    if (!RingBufferOne || !RingBufferTwo)
     {
         Result = STATUS_NO_MEMORY;
         goto Done;
@@ -280,9 +280,10 @@ NTSTATUS UtIoctlHandleReceive(
 
     if (!NT_SUCCESS(Result))
     {
-        ZwClose(StreamContext->DmaWorker);
-
         StreamContext->Initialized = FALSE;
+
+        ZwWaitForSingleObject(StreamContext->DmaWorker, FALSE, NULL);
+        ZwClose(StreamContext->DmaWorker);
         goto Done;
     }
 

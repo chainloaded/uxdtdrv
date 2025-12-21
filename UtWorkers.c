@@ -136,7 +136,7 @@ void _Function_class_(KSTART_ROUTINE) UtWoUxdtWorker(
     _In_ PVOID Context
 )
 /*++
-* 
+
     Routine Description:
         Worker thread that consumes the filled ring buffers, decodes any
         UXDT messages found and copies results into the client's shared
