@@ -24,13 +24,10 @@ FLOAT UtAppCos(
     FLOAT Sq = Angle * Angle;
     FLOAT Result = 1.0f;
 
-    // Term: - x^2 / 2
     Result -= (Sq / 2.0f);
 
-    // Term: + x^4 / 24
     Result += (Sq * Sq / 24.0f);
 
-    // Term: - x^6 / 720
     Result -= (Sq * Sq * Sq / 720.0f);
 
     return Result;
@@ -71,7 +68,6 @@ FLOAT UtAppGoertzelEnergy(
     INT16   MonoSample;
 
     // Precompute the coefficient.
-    // Omega = (2 * PI * Freq) / SampleRate
     Omega = (2.0f * UT_PI * TargetFreq) / (FLOAT)UT_TARGET_CHANNELS;
     Coeff = 2.0f * UtAppCos(Omega);
 
@@ -79,11 +75,11 @@ FLOAT UtAppGoertzelEnergy(
     Q2 = 0.0f;
 
     // Run the Goertzel filter loop.
-    // Buffer is stereo (L, R, L, R), so we iterate 2 * NumSamples.
+    // Buffer is stereo so we iterate 2 * NumSamples.
     for (i = 0; i < NumSamples * 2; i += 2) 
     {
 
-        // Downmix Stereo to Mono: (L + R) / 2
+        // Downmix Stereo to Mono
         MonoSample = (Buffer[i] + Buffer[i + 1]) / 2;
 
         Q0 = (Coeff * Q1) - Q2 + (FLOAT)MonoSample;
@@ -91,7 +87,7 @@ FLOAT UtAppGoertzelEnergy(
         Q1 = Q0;
     }
 
-    // Calculate Magnitude Squared = Q1^2 + Q2^2 - Q1*Q2*Coeff
+    // Calculate Magnitude Squared
     return (Q1 * Q1) + (Q2 * Q2) - (Q1 * Q2 * Coeff);
 }
 
@@ -247,6 +243,7 @@ NTSTATUS UtApAnalyzePcmStream(
                 CurrentChar     = 0;
                 CalculatedCrc   = 0; 
             }
+
             continue;
         }
 
@@ -254,7 +251,8 @@ NTSTATUS UtApAnalyzePcmStream(
         CurrentChar = (CurrentChar << 1) | DetectedBit;
         BitIndexInChar++;
 
-        if (BitIndexInChar == 8) {
+        if (BitIndexInChar == 8) 
+        {
             // We have a full byte.
 
             // Output buffer overflow
